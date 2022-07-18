@@ -1,57 +1,77 @@
+const fs = require('fs');
+let data = fs.readFileSync('products.json');
+let allData = JSON.parse(data);
+
 const express = require('express');
+const cors = require('cors');
 const app = express();
-
 app.use(express.json());
-app.get('/products ', getProduct);
-app.post('/products/create ', createProduct);
-app.patch('/products/:productId ', updateProduct);
-app.delete('/products/:productId ', deleteProduct);
+app.use(cors());
+app.use((req,res,next)=>{
+    console.log(req.method, req.path);
+    next();
+})
 
-async function getProduct(req, res) {
-    let data=await fetch("http://localhost:3000/products");
-    let result= await data.json()
-    res.status(200).send(result);
+app.get('/products', (req, res) => {
+    return res.status(200).send({
+        Products: allData
+    });
+});
 
-}
-async function createProduct(req, res) {
-    try {
-        await fetch(`http://localhost:3000/products`,{
-            method :"POST",
-            body : JSON.stringify(req.body),
-            headers : {"Content-Type" : "application/json"}
-        });
-    } catch (error) {
-        console.log(error)
+app.post('/products/create', (req, res) => {
+    let newProduct = req.body;
+    allData.push(newProduct);
+    fs.writeFile("products.json", JSON.stringify(allData), (err) => {
+        if (err) throw err;
     }
-    res.status(200).send("add Successfully");
-
+    );
+    return res.status(200).send({
+        message: 'Product created successfully',
+        Product: newProduct
+    });
 }
-async function updateProduct(req, res) {
-    let productId = req.params.productId
-    const body = req.body;
-    try {
-        await fetch (`http://localhost:3000/products/${productId}`,{
-            method :"PATCH",
-            body : JSON.stringify(body),
-            headers : {"Content-Type" : "application/json"}
+);
+
+app.delete('/products/:productId', (req, res) => {
+    let id = req.params.productId;
+    let index = allData.findIndex(product => product.id == id);
+    if(index == -1){
+        return res.status(404).send({
+            message: 'Product not found'
         });
-    } catch (error) {
-        console.log(error);
     }
-    res.status(200).send(addresses[0]);
-
+    allData.splice(index, 1);
+    fs.writeFile("products.json", JSON.stringify(allData), (err) => {
+        if (err) throw err;
+    }
+    );
+    return res.status(200).send({
+        message: 'Product deleted successfully'
+    });
 }
-async function deleteProduct(req, res) {
-    let productId = req.params.productId
-    try {
-        await fetch(`http://localhost:3000/products/${productId}`,{
-            method :"DELETE"
+);
+
+app.patch('/products/:productId', (req, res) => {
+    let id = req.params.productId;
+    let index = allData.findIndex(product => product.id == id);
+    if(index == -1){
+        return res.status(404).send({
+            message: 'Product not found'
         });
-    } catch (error) {
-        console.log(error);
     }
-    res.status(200).send("deleted SucessFully");
-
+    allData[index] = req.body;
+    fs.writeFile("products.json", JSON.stringify(allData), (err) => {
+        if (err) throw err;
+    }
+    );
+    return res.status(200).send({
+        message: 'Product updated successfully'
+    });
 }
+);
 
-app.listen(7000);
+
+
+app.listen(7000, () => {
+    console.log('Server is running on port 7000');
+})
