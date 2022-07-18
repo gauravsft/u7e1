@@ -1,9 +1,1 @@
-[
-    
-    {
-        "name": "shoes",
-        "price": "1000",
-        "description": "sport shoes",
-        "id":1
-    }
-]
+[{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"New Product 10 update","price":"$9991","description":"This is a new product"},{"name":"New Product 10 update","price":"$9991","description":"This is a new product"},{"name":"New Product 10 update","price":"$9991","description":"This is a new product"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":"sport shoes","id":"2"},{"name":"shoes","price":"1000","description":"sport shoes"},{"name":"shoes","price":"1000","description":" shoes"},{"name":"shoes","price":"1000","description":" shoes","id":"5"},{"name":"shoes","price":"1000","description":" shoes","id":"3"}]
